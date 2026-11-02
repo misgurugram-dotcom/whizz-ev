@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Whizz Electric - Rider Rental Registration</title>
+  <!-- Tesseract.js (AI OCR Engine) -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #080c14;
+      color: #e2e8f0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .whizz-card {
+      background: linear-gradient(145deg, #0e1726 0%, #090e17 100%);
+      border: 1px solid rgba(0, 194, 255, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 82, 255, 0.15);
+    }
+    .whizz-input {
+      background-color: #060a12;
+      border: 1px solid #1e293b;
+      color: #f8fafc;
+      transition: all 0.3s ease;
+    }
+    .whizz-input:focus {
+      border-color: #00c2ff;
+      box-shadow: 0 0 10px rgba(0, 194, 255, 0.3);
+      outline: none;
+    }
+    .whizz-btn {
+      background: linear-gradient(90deg, #0052ff 0%, #00c2ff 100%);
+      transition: all 0.3s ease;
+    }
+    .whizz-btn:hover {
+      opacity: 0.95;
+      box-shadow: 0 0 15px rgba(0, 194, 255, 0.4);
+    }
+    .drop-zone {
+      border: 2px dashed #1e293b;
+      transition: all 0.3s ease;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: #00c2ff;
+      background-color: rgba(0, 194, 255, 0.03);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between py-6 px-4 sm:px-6">
+
+  <!-- Header Section -->
+  <header class="max-w-xl mx-auto w-full mb-6 flex items-center justify-between border-b border-gray-800 pb-4">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-cyan-500/30">
+        <i class="fa-solid font-bold">⚡</i>
+      </div>
+      <div>
+        <h1 class="text-2xl font-black tracking-wider text-white">Whi<span class="text-cyan-400">zZ</span></h1>
+        <p class="text-xs text-cyan-400 tracking-widest font-semibold uppercase">Electric Fleet</p>
+      </div>
+    </div>
+    <span class="bg-blue-900/40 text-cyan-400 text-xs px-3 py-1 rounded-full border border-cyan-500/30 font-medium flex items-center gap-1.5">
+      <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span> OCR Active
+    </span>
+  </header>
+
+  <!-- Main Content Card -->
+  <main class="max-w-xl mx-auto w-full">
+    <div class="whizz-card rounded-2xl p-6 sm:p-8 relative overflow-hidden">
+      
+      <!-- Top Title -->
+      <div class="flex items-center justify-between mb-6 border-b border-gray-800/80 pb-4">
+        <div>
+          <h2 class="text-xl font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-address-card text-cyan-400"></i>
+            Rider Rental Registration
+          </h2>
+          <p class="text-xs text-gray-400 mt-1">Fill rider details and upload payment screenshot to auto-collect UTR</p>
+        </div>
+        <span class="text-xs text-blue-400 font-semibold bg-blue-950/60 px-2.5 py-1 rounded-md border border-blue-800/50">Step 1 of 1</span>
+      </div>
+
+      <!-- Registration Form (Autocomplete Turned Off) -->
+      <form id="rentalForm" class="space-y-5" autocomplete="off">
+        
+        <!-- 1. Rider Full Name -->
+        <div>
+          <label for="riderName" class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-2">
+            Rider Full Name <span class="text-cyan-400">*</span>
+          </label>
+          <div class="relative">
+            <i class="fa-regular fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+            <input 
+              type="text" 
+              id="riderName" 
+              required 
+              autocomplete="off"
+              placeholder="e.g. Kamal Data Team" 
+              class="whizz-input w-full pl-10 pr-4 py-3 rounded-xl text-sm font-medium placeholder-gray-500 focus:outline-none"
+            >
+          </div>
+        </div>
+
+        <!-- 2. Mobile Number -->
+        <div>
+          <label for="mobileNo" class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-2">
+            Rider Mobile Number <span class="text-cyan-400">*</span>
+          </label>
+          <div class="relative">
+            <i class="fa-solid fa-phone absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+            <input 
+              type="tel" 
+              id="mobileNo" 
+              required 
+              pattern="[0-9]{10}"
+              autocomplete="off"
+              placeholder="e.g. 7827982756" 
+              class="whizz-input w-full pl-10 pr-4 py-3 rounded-xl text-sm font-medium placeholder-gray-500 focus:outline-none"
+            >
+          </div>
+        </div>
+
+        <!-- 3. Rental Vehicle Type Dropdown -->
+        <div>
+          <label for="vehicleType" class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-2">
+            Rental Vehicle Type <span class="text-cyan-400">*</span>
+          </label>
+          <div class="relative">
+            <i class="fa-solid fa-motorcycle absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+            <select 
+              id="vehicleType" 
+              required 
+              class="whizz-input w-full pl-10 pr-8 py-3 rounded-xl text-sm font-medium appearance-none cursor-pointer focus:outline-none"
+            >
+              <option value="" disabled selected>Select Rental Category</option>
+              <option value="2-Wheeler">2-Wheeler Electric Scooter</option>
+              <option value="3-Wheeler">3-Wheeler Electric Auto / Loader</option>
+            </select>
+            <i class="fa-solid fa-chevron-down absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
+          </div>
+        </div>
+
+        <!-- 4. Payment Screenshot Upload (OCR System) -->
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider">
+              Payment Screenshot <span class="text-cyan-400">(Optional - Auto-Collects UTR/UPI ID)</span>
+            </label>
+          </div>
+          
+          <div 
+            id="dropZone" 
+            class="drop-zone rounded-xl p-5 text-center cursor-pointer relative bg-slate-950/40"
+            onclick="document.getElementById('screenshot').click()"
+          >
+            <input 
+              type="file" 
+              id="screenshot" 
+              accept="image/*" 
+              class="hidden"
+            >
+            
+            <div id="uploadPrompt" class="space-y-2">
+              <div class="w-12 h-12 rounded-full bg-blue-900/30 text-cyan-400 flex items-center justify-center mx-auto text-lg border border-cyan-500/20">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+              </div>
+              <p class="text-xs text-gray-200 font-semibold">Click or drag payment screenshot here</p>
+              <p class="text-[10px] text-gray-400">Supports GPay, PhonePe, Paytm, BHIM screenshots (PNG, JPG)</p>
+              <span class="inline-block text-[10px] bg-cyan-950 text-cyan-300 border border-cyan-800/50 px-2 py-0.5 rounded mt-1 font-mono">
+                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> AI OCR Enabled
+              </span>
+            </div>
+
+            <!-- Upload Preview & Scanner Loading -->
+            <div id="uploadPreview" class="hidden flex flex-col items-center">
+              <img id="imagePreview" src="" alt="Screenshot Preview" class="max-h-36 rounded-lg border border-cyan-500/30 object-contain mb-3">
+              <div id="ocrStatus" class="text-xs text-cyan-400 font-medium flex items-center justify-center gap-2">
+                <i class="fa-solid fa-spinner animate-spin"></i> Reading UTR from screenshot...
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Auto-collected UTR / UPI Ref ID -->
+        <div>
+          <label for="utrNo" class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-2">
+            UTR No / UPI Ref ID <span class="text-cyan-400">(Optional)</span>
+          </label>
+          <div class="relative">
+            <i class="fa-solid fa-receipt absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+            <input 
+              type="text" 
+              id="utrNo" 
+              autocomplete="off"
+              placeholder="Auto-extracted 12 digit UTR number" 
+              class="whizz-input w-full pl-10 pr-20 py-3 rounded-xl text-sm font-mono font-medium placeholder-gray-500 focus:outline-none"
+            >
+            <button 
+              type="button" 
+              id="editUtrBtn" 
+              class="absolute right-2 top-1/2 -translate-y-1/2 text-xs bg-slate-800 hover:bg-slate-700 text-gray-300 px-2.5 py-1 rounded-md border border-gray-700 transition"
+            >
+              <i class="fa-regular fa-pen-to-square mr-1"></i>Edit
+            </button>
+          </div>
+          <p class="text-[10px] text-gray-400 mt-1">Automatically read via OCR. You can edit if needed.</p>
+        </div>
+
+        <!-- Submit Button -->
+        <button 
+          type="submit" 
+          id="submitBtn"
+          class="whizz-btn w-full py-3.5 rounded-xl font-bold text-white shadow-lg text-sm tracking-wide mt-2 flex items-center justify-center gap-2"
+        >
+          <i class="fa-solid fa-paper-plane"></i>
+          <span>Submit Registration Form</span>
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <!-- Success Modal -->
+  <div id="successModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="whizz-card p-6 sm:p-8 rounded-2xl max-w-sm w-full text-center space-y-4 border-cyan-500/40">
+      <div class="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-2xl border border-emerald-500/30">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <h3 class="text-xl font-bold text-white">Registration Successful!</h3>
+      <p class="text-xs text-gray-300">Rider rental form details have been saved directly to your Google Sheet.</p>
+      
+      <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 text-left space-y-1.5 text-xs font-mono">
+        <div class="flex justify-between text-gray-400"><span>Booking Ref:</span> <span id="modalRef" class="text-cyan-400">WHZ-000000</span></div>
+        <div class="flex justify-between text-gray-400"><span>Rider Name:</span> <span id="modalName" class="text-white"></span></div>
+        <div class="flex justify-between text-gray-400"><span>Mobile:</span> <span id="modalMobile" class="text-white"></span></div>
+        <div class="flex justify-between text-gray-400"><span>Vehicle Type:</span> <span id="modalType" class="text-white"></span></div>
+        <div class="flex justify-between text-gray-400"><span>UTR / UPI ID:</span> <span id="modalUtr" class="text-emerald-400"></span></div>
+      </div>
+
+      <button 
+        onclick="closeModal()" 
+        class="whizz-btn w-full py-2.5 rounded-xl font-bold text-white text-xs tracking-wider uppercase mt-2"
+      >
+        Done & Register Another Rider
+      </button>
+    </div>
+  </div>
+
+  <footer class="text-center text-[11px] text-gray-500 mt-6">
+    &copy; Whizz Electric Fleet Management System. All rights reserved.
+  </footer>
+
+  <!-- JavaScript Logic -->
+  <script>
+    const GOOGLE_SHEET_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyUSYFvO3ggpS1v425IQ9Y4SBX20JILmSDmcqF3xgCCEHflncN68nFVlPk7ffyhuh1MJg/exec';
+
+    const screenshotInput = document.getElementById('screenshot');
+    const dropZone = document.getElementById('dropZone');
+    const uploadPrompt = document.getElementById('uploadPrompt');
+    const uploadPreview = document.getElementById('uploadPreview');
+    const imagePreview = document.getElementById('imagePreview');
+    const ocrStatus = document.getElementById('ocrStatus');
+    const utrInput = document.getElementById('utrNo');
+    const rentalForm = document.getElementById('rentalForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    let base64ImageString = "";
+    let uploadedFileName = "";
+
+    // Fast Canvas-based Image Compression for fast submission speed
+    function compressImage(file, maxWidth = 800, quality = 0.7) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const img = new Image();
+          img.onload = function () {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Drag and Drop Effects
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropZone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+      });
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+      });
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        screenshotInput.files = files;
+        handleScreenshotUpload(files[0]);
+      }
+    });
+
+    screenshotInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        handleScreenshotUpload(e.target.files[0]);
+      }
+    });
+
+    // Handle Image & OCR Scanner
+    async function handleScreenshotUpload(file) {
+      uploadedFileName = file.name;
+
+      // Compress image for ultra-fast payload transfer
+      base64ImageString = await compressImage(file);
+      imagePreview.src = base64ImageString;
+      uploadPrompt.classList.add('hidden');
+      uploadPreview.classList.remove('hidden');
+
+      ocrStatus.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-cyan-400"></i> Reading UTR/UPI ID...`;
+      ocrStatus.className = "text-xs text-cyan-400 font-medium flex items-center justify-center gap-2";
+      utrInput.value = "";
+
+      try {
+        const result = await Tesseract.recognize(file, 'eng');
+        const extractedText = result.data.text;
+        
+        const utrMatch = extractedText.match(/\b\d{12}\b/) || 
+                         extractedText.match(/UPI\s*(?:Ref|ID|Txn|Transaction)?\s*[:#-]?\s*(\d{12})/i) ||
+                         extractedText.match(/Ref\s*(?:No|ID)?\s*[:#-]?\s*(\d{12})/i);
+
+        if (utrMatch) {
+          const foundUTR = Array.isArray(utrMatch) ? (utrMatch[1] || utrMatch[0]) : utrMatch;
+          utrInput.value = foundUTR;
+          ocrStatus.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> UTR Auto-Collected: <b class="font-mono">${foundUTR}</b>`;
+          ocrStatus.className = "text-xs text-emerald-400 font-medium flex items-center justify-center gap-1.5";
+        } else {
+          ocrStatus.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Could not auto-read UTR. Please enter manually.`;
+          ocrStatus.className = "text-xs text-amber-400 font-medium flex items-center justify-center gap-1.5";
+        }
+      } catch (err) {
+        console.error("OCR Error:", err);
+        ocrStatus.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-400"></i> Error scanning image. Type UTR manually.`;
+        ocrStatus.className = "text-xs text-rose-400 font-medium flex items-center justify-center gap-1.5";
+      }
+    }
+
+    // Submit Form Data to Google Sheet
+    rentalForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const riderName = document.getElementById('riderName').value.trim();
+      const mobileNo = document.getElementById('mobileNo').value.trim();
+      const vehicleType = document.getElementById('vehicleType').value;
+      const utrNo = document.getElementById('utrNo').value.trim();
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Saving...`;
+
+      try {
+        const formData = new URLSearchParams();
+        formData.append('riderName', riderName);
+        formData.append('mobileNo', mobileNo);
+        formData.append('vehicleType', vehicleType);
+        formData.append('utrNo', utrNo || 'Not provided');
+        formData.append('screenshotData', base64ImageString || '');
+        formData.append('fileName', uploadedFileName || (base64ImageString ? 'screenshot.jpg' : 'no-screenshot'));
+
+        await fetch(GOOGLE_SHEET_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: formData.toString()
+        });
+
+        // Show Modal
+        document.getElementById('modalRef').innerText = `WHZ-${Math.floor(100000 + Math.random() * 900000)}`;
+        document.getElementById('modalName').innerText = riderName;
+        document.getElementById('modalMobile').innerText = mobileNo;
+        document.getElementById('modalType').innerText = vehicleType;
+        document.getElementById('modalUtr').innerText = utrNo || 'Not provided';
+        document.getElementById('successModal').classList.remove('hidden');
+
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        alert('Data submit karne me error aaya. Please re-check connection.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>Submit Registration Form</span>`;
+      }
+    });
+
+    function closeModal() {
+      document.getElementById('successModal').classList.add('hidden');
+      rentalForm.reset();
+      base64ImageString = "";
+      uploadedFileName = "";
+      uploadPreview.classList.add('hidden');
+      uploadPrompt.classList.remove('hidden');
+    }
+  </script>
+
+</body>
+</html>
