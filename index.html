@@ -86,6 +86,24 @@
       <!-- Registration Form (Autocomplete Turned Off) -->
       <form id="rentalForm" class="space-y-5" autocomplete="off">
         
+        <!-- 0. Form Fill By -->
+        <div>
+          <label for="formFillBy" class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-2">
+            Form Fill By <span class="text-cyan-400">*</span>
+          </label>
+          <div class="relative">
+            <i class="fa-solid fa-user-pen absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+            <input 
+              type="text" 
+              id="formFillBy" 
+              required 
+              autocomplete="off"
+              placeholder="Form kisne bhara hai (aapka naam)" 
+              class="whizz-input w-full pl-10 pr-4 py-3 rounded-xl text-sm font-medium placeholder-gray-500 focus:outline-none"
+            >
+          </div>
+        </div>
+
         <!-- 1. Rider Full Name -->
         <div>
           <label for="riderName" class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-2">
@@ -233,6 +251,7 @@
       
       <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 text-left space-y-1.5 text-xs font-mono">
         <div class="flex justify-between text-gray-400"><span>Booking Ref:</span> <span id="modalRef" class="text-cyan-400">WHZ-000000</span></div>
+        <div class="flex justify-between text-gray-400"><span>Form Fill By:</span> <span id="modalFillBy" class="text-white"></span></div>
         <div class="flex justify-between text-gray-400"><span>Rider Name:</span> <span id="modalName" class="text-white"></span></div>
         <div class="flex justify-between text-gray-400"><span>Mobile:</span> <span id="modalMobile" class="text-white"></span></div>
         <div class="flex justify-between text-gray-400"><span>Vehicle Type:</span> <span id="modalType" class="text-white"></span></div>
@@ -369,6 +388,7 @@
     rentalForm.addEventListener('submit', async function(e) {
       e.preventDefault();
 
+      const formFillBy = document.getElementById('formFillBy').value.trim();
       const riderName = document.getElementById('riderName').value.trim();
       const mobileNo = document.getElementById('mobileNo').value.trim();
       const vehicleType = document.getElementById('vehicleType').value;
@@ -379,6 +399,7 @@
 
       try {
         const formData = new URLSearchParams();
+        formData.append('formFillBy', formFillBy);
         formData.append('riderName', riderName);
         formData.append('mobileNo', mobileNo);
         formData.append('vehicleType', vehicleType);
@@ -397,6 +418,7 @@
 
         // Show Modal
         document.getElementById('modalRef').innerText = `WHZ-${Math.floor(100000 + Math.random() * 900000)}`;
+        document.getElementById('modalFillBy').innerText = formFillBy;
         document.getElementById('modalName').innerText = riderName;
         document.getElementById('modalMobile').innerText = mobileNo;
         document.getElementById('modalType').innerText = vehicleType;
